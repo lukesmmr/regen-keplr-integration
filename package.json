@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@cosmjs/stargate": "^0.33.0",
+    "@keplr-wallet/types": "^0.12.190",
     "next": "15.1.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
