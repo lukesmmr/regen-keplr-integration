@@ -14,6 +14,15 @@ export default function KeplrConnect() {
   const [balance, setBalance] = useState<string>('');
   const [error, setError] = useState<string>('');
 
+  // Auto-connect if wallet connection was previously persisted
+  useEffect(() => {
+    const storedConnection = localStorage.getItem("keplrConnected");
+    if (storedConnection === "true") {
+      connectKeplr();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const connectKeplr = async () => {
     try {
       // Check if Keplr is installed
@@ -61,19 +70,32 @@ export default function KeplrConnect() {
       const regenBalance = (parseInt(balanceResult.amount) / 1_000_000).toFixed(6);
       setBalance(regenBalance);
 
+      // Persist the connection state. This will let us auto-connect on refresh.
+      localStorage.setItem("keplrConnected", "true");
+
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     }
   };
 
+  const disconnectKeplr = () => {
+    // Clear the state and remove persisted connection state
+    setAddress('');
+    setBalance('');
+    setError('');
+    localStorage.removeItem("keplrConnected");
+  };
+
   return (
     <div className="flex flex-col items-center gap-4 p-4">
-      <button
-        onClick={connectKeplr}
-        className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-      >
-        Connect Keplr
-      </button>
+      {!address && (
+        <button
+          onClick={connectKeplr}
+          className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+        >
+          Connect Keplr
+        </button>
+      )}
 
       {error && (
         <div className="text-red-500">
@@ -87,6 +109,13 @@ export default function KeplrConnect() {
           <p className="font-mono text-sm mb-2">{address}</p>
           <p className="text-sm text-gray-600">Balance:</p>
           <p className="font-bold">{balance} REGEN</p>
+
+          <button
+            onClick={disconnectKeplr}
+            className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+          >
+            Disconnect Keplr
+          </button>
         </div>
       )}
     </div>
