@@ -3,6 +3,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -65,6 +66,9 @@ export default function SendTokensDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Send REGEN Tokens</DialogTitle>
+          <DialogDescription>
+            Enter the recipient's address and the amount of REGEN tokens you want to send.
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(onFormSubmit)} className='space-y-4'>
           <div className='grid w-full items-center gap-1.5'>
