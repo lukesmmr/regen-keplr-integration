@@ -8,9 +8,9 @@ import WalletConnection from '@/app/components/WalletConnection';
 
 function MainGrid({ children }: { children: React.ReactNode }) {
   return (
-    <div className='grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]'>
+    <div className='grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 md:gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]'>
       <main className='flex flex-col gap-8 row-start-2 items-center sm:items-start'>
-        <div className='mx-auto md:min-h-[420px] max-w-[820px] bg-[#EDF2FA] shadow-lg rounded-lg'>
+        <div className='mx-auto max-w-[820px] bg-[#EDF2FA] shadow-lg rounded-lg'>
           {children}
         </div>
       </main>
@@ -34,7 +34,9 @@ function HomeContent() {
           </div>
         </div>
       ) : (
-        <WalletConnection />
+        <div className='flex flex-col p-10 shadow-[4px_0px_8px_-4px_rgba(0,0,0,0.1)]'>
+          <WalletConnection />
+        </div>
       )}
     </MainGrid>
   );
