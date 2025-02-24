@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { useForm } from 'react-hook-form';
+import { useState } from 'react';
 
 type SendFormData = {
   recipientAddress: string;
@@ -18,7 +19,7 @@ type SendFormData = {
 interface SendTokensDialogProps {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
-  onSend: (data: SendFormData) => void;
+  onSend: (data: SendFormData) => Promise<string>;
 }
 
 export default function SendTokensDialog({
@@ -31,6 +32,25 @@ export default function SendTokensDialog({
     handleSubmit,
     formState: { errors },
   } = useForm<SendFormData>();
+
+  // State to indicate that the transaction is pending approval/signature.
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Wrapper function that handles form submission.
+  const onFormSubmit = async (data: SendFormData) => {
+    setIsSubmitting(true);
+    try {
+      // Wait for the transaction to be signed and broadcasted.
+      await onSend(data);
+      // Only close the modal on successful transaction
+      setIsOpen(false);
+    } catch (error) {
+      // Keep modal open if there's an error
+      // Errors are already handled in onSend (i.e. via toast notifications)
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -46,7 +66,7 @@ export default function SendTokensDialog({
         <DialogHeader>
           <DialogTitle>Send REGEN Tokens</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit(onSend)} className='space-y-4'>
+        <form onSubmit={handleSubmit(onFormSubmit)} className='space-y-4'>
           <div className='grid w-full items-center gap-1.5'>
             <Label htmlFor='recipientAddress'>Recipient Address</Label>
             <Input
@@ -89,7 +109,9 @@ export default function SendTokensDialog({
               <p className='text-sm text-red-500'>{errors.amount.message}</p>
             )}
           </div>
-          <Button type='submit'>Confirm</Button>
+          <Button type='submit' disabled={isSubmitting}>
+            {isSubmitting ? <>Waiting for approval...</> : 'Confirm'}
+          </Button>
         </form>
       </DialogContent>
     </Dialog>
