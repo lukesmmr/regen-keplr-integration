@@ -15,9 +15,9 @@ export default function SendCard() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className='h-full flex flex-col gap-6 p-10'>
+    <div className='h-full flex flex-col gap-2 p-10'>
       <div className='flex items-center justify-center'>
-        <div className='p-4'>
+        <div className='p-2'>
           <Image
             src='/regen-round-x2.png'
             alt='Regen Network Logo'

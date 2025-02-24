@@ -74,20 +74,23 @@ export default function SendTokensDialog({
           START
         </Button>
       </DialogTrigger>
-      <DialogContent onPointerDownOutside={(e) => e.preventDefault()}>
+      <DialogContent
+        onPointerDownOutside={(e) => e.preventDefault()}
+      >
         <DialogHeader>
-          <DialogTitle>Send REGEN Tokens</DialogTitle>
-          <DialogDescription>
-            Enter the recipient's address and the amount of REGEN tokens you
-            want to send.
+          <DialogTitle className='max-[896px]:text-xl text-lg pb-2'>Send REGEN Tokens</DialogTitle>
+          <DialogDescription className='max-[896px]:text-lg pb-4'>
+            Enter the recipient&apos;s address and the amount of REGEN tokens
+            you want to send.
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit(onFormSubmit)} className='space-y-4'>
+        <form onSubmit={handleSubmit(onFormSubmit)} className='space-y-8'>
           <div className='grid w-full items-center gap-1.5'>
-            <Label htmlFor='recipientAddress'>Recipient Address</Label>
+            <Label className='max-[896px]:text-lg' htmlFor='recipientAddress'>Recipient Address</Label>
             <Input
               placeholder='regen1k8c2m5cn322akk5wy8lpt87dd2f4yh9zced8cw'
               id='recipientAddress'
+              className='w-full text-lg py-6 px-4 h-10 leading-relaxed'
               {...register('recipientAddress', {
                 required: 'Recipient address is required',
                 pattern: {
@@ -104,12 +107,13 @@ export default function SendTokensDialog({
             )}
           </div>
           <div className='grid w-full items-center gap-1.5'>
-            <Label htmlFor='amount'>Amount (REGEN)</Label>
+            <Label className='max-[896px]:text-lg' htmlFor='amount'>Amount (REGEN)</Label>
             <Input
               id='amount'
               placeholder='Enter amount in REGEN...'
               type='number'
               step='0.000001'
+              className='w-full text-lg py-6 px-4 h-10 leading-relaxed'
               {...register('amount', {
                 required: 'Amount is required',
                 valueAsNumber: true,
@@ -125,7 +129,11 @@ export default function SendTokensDialog({
               <p className='text-sm text-red-500'>{errors.amount.message}</p>
             )}
           </div>
-          <Button type='submit' disabled={isSubmitting}>
+          <Button
+            type='submit'
+            disabled={isSubmitting}
+            className='w-full max-[896px]:py-6 min-[896px]:py-5 max-[896px]:text-xl text-lg'
+          >
             {isSubmitting ? <>Waiting for approval...</> : 'Confirm'}
           </Button>
         </form>
