@@ -77,7 +77,7 @@ export default function SendCard() {
         }}
       />
 
-      <div className='md:hidden mt-auto mt-[10%]'>
+      <div className='md:hidden mt-auto mt-[11%]'>
         <PoweredByKeplr />
       </div>
     </div>
