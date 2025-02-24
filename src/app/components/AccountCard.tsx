@@ -2,11 +2,15 @@ import Image from 'next/image';
 import { Button } from "@/components/ui/button";
 import { useWallet } from '@/context/WalletContext';
 import { toast } from 'sonner'
+
 export default function AccountCard() {
-  const { address, balance, disconnectWallet } = useWallet();
+  const { address, balance, regenPrice, disconnectWallet } = useWallet();
 
   // Shorten the wallet address for a cleaner display
   const shortenedAddress = address ? `${address.slice(0, 10)}...${address.slice(-4)}` : '';
+
+  // Calculate the market value in USD (if regenPrice is available)
+  const marketValue = regenPrice && balance ? parseFloat(balance) * regenPrice : 0;
 
   return (
     <div className="h-full flex flex-col gap-4 p-4">
@@ -25,7 +29,12 @@ export default function AccountCard() {
           <span className="text-4xl font-medium">{balance || '0.000'}</span>
           <span className="text-xl text-gray-400">REGEN</span>
         </div>
-        <span className="text-gray-500">[Market Value]</span>
+        {/* Display the USD market value if available */}
+        <span className="text-gray-500">
+          {regenPrice
+            ? `$${marketValue.toFixed(2)}`
+            : 'Fetching price...'}
+        </span>
       </div>
 
       <div className="flex items-center gap-2 text-sm">

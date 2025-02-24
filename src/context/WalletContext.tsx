@@ -8,6 +8,7 @@ interface WalletContextType {
   address: string;
   balance: string;
   error: string;
+  regenPrice: number;
   connectWallet: () => Promise<void>;
   disconnectWallet: () => void;
 }
@@ -18,15 +19,15 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
   const [address, setAddress] = useState('');
   const [balance, setBalance] = useState('');
   const [error, setError] = useState('');
+  const [regenPrice, setRegenPrice] = useState(0);
 
   const connectWallet = async () => {
     try {
-      if (!window.keplr) {
+      if (!(window as any).keplr) {
         throw new Error('Please install Keplr extension');
       }
-
       // Suggest the chain information for custom chains
-      await window.keplr.experimentalSuggestChain({
+      await (window as any).keplr.experimentalSuggestChain({
         chainId: chainConfig.chainId,
         chainName: chainConfig.chainName,
         rpc: chainConfig.rpc,
@@ -40,8 +41,8 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
       });
 
       // Enable the chain and get the offline signer
-      await window.keplr.enable(chainConfig.chainId);
-      const offlineSigner = window.keplr.getOfflineSigner(chainConfig.chainId);
+      await (window as any).keplr.enable(chainConfig.chainId);
+      const offlineSigner = (window as any).keplr.getOfflineSigner(chainConfig.chainId);
       const accounts = await offlineSigner.getAccounts();
       const userAddress = accounts[0].address;
       setAddress(userAddress);
@@ -55,6 +56,7 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
         userAddress,
         chainConfig.stakeCurrency.coinMinimalDenom
       );
+      // Convert the amount (assumed in uREGEN) to REGEN with 6 decimals
       const regenBalance = (parseInt(balanceResult.amount) / 1_000_000).toFixed(6);
       setBalance(regenBalance);
 
@@ -71,6 +73,22 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
     localStorage.removeItem('keplrConnected');
   };
 
+  // Function to fetch the current REGEN price from our API endpoint
+  const fetchRegenPrice = async () => {
+    try {
+      const response = await fetch('/api/regenPrice');
+      if (!response.ok) {
+        throw new Error('Failed to fetch REGEN price');
+      }
+      const data = await response.json();
+      if (data.regenPrice) {
+        setRegenPrice(data.regenPrice);
+      }
+    } catch (error) {
+      console.error('Error fetching REGEN price:', error);
+    }
+  };
+
   // Auto-connect if previously connected
   useEffect(() => {
     const storedConnection = localStorage.getItem('keplrConnected');
@@ -80,9 +98,16 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Fetch the REGEN price on mount and then refetch every 5 minutes
+  useEffect(() => {
+    fetchRegenPrice();
+    const interval = setInterval(fetchRegenPrice, 300000); // 300,000ms = 5 minutes
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <WalletContext.Provider
-      value={{ address, balance, error, connectWallet, disconnectWallet }}
+      value={{ address, balance, error, regenPrice, connectWallet, disconnectWallet }}
     >
       {children}
     </WalletContext.Provider>
