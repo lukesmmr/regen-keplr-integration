@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { Button } from "@/components/ui/button";
 import { useWallet } from '@/context/WalletContext';
+import PoweredByKeplr from './PoweredByKeplr';
 
 export default function SendCard() {
   const { address, balance } = useWallet();
@@ -37,6 +38,10 @@ export default function SendCard() {
       >
         START
       </Button>
+
+      <div className="md:hidden mt-auto mt-[10%]">
+        <PoweredByKeplr />
+      </div>
     </div>
   );
 }

@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { Button } from "@/components/ui/button";
 import { useWallet } from '@/context/WalletContext';
 import { toast } from 'sonner'
+import PoweredByKeplr from './PoweredByKeplr';
 
 export default function AccountCard() {
   const { address, balance, regenPrice } = useWallet();
@@ -55,19 +56,10 @@ export default function AccountCard() {
         </Button>
       </div>
 
-      <div className="flex flex-col items-center gap-1 text-sm text-gray-500 mt-auto">
-        <div className="flex items-center justify-center gap-1">
-          <span>Powered by</span>
-          <Image
-            src="/keplr-monochrome-dark.svg"
-            alt="Keplr Logo"
-            width={75}
-            height={25}
-          />
-        </div>
-        <span className="italic text-xs">Connected to Regen Redwood Testnet</span>
+      {/* Render PoweredByKeplr component only on desktop */}
+      <div className="hidden md:block mt-auto">
+        <PoweredByKeplr />
       </div>
-
     </div>
   );
 }
