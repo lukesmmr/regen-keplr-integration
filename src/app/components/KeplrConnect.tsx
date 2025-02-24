@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Window as KeplrWindow } from "@keplr-wallet/types";
 import { SigningStargateClient } from "@cosmjs/stargate";
 import { chainConfig } from '../config/chainConfig';
+import { Button } from "@/components/ui/button";
 
 declare global {
   interface Window extends KeplrWindow {}
@@ -89,12 +90,9 @@ export default function KeplrConnect() {
   return (
     <div className="flex flex-col items-center gap-4 p-4">
       {!address && (
-        <button
-          onClick={connectKeplr}
-          className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-        >
+        <Button onClick={connectKeplr}>
           Connect Keplr
-        </button>
+        </Button>
       )}
 
       {error && (
@@ -110,12 +108,9 @@ export default function KeplrConnect() {
           <p className="text-sm text-gray-600">Balance:</p>
           <p className="font-bold">{balance} REGEN</p>
 
-          <button
-            onClick={disconnectKeplr}
-            className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
-          >
+          <Button onClick={disconnectKeplr} variant="destructive" className="mt-4">
             Disconnect Keplr
-          </button>
+          </Button>
         </div>
       )}
     </div>
