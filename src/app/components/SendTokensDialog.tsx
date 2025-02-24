@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 type SendFormData = {
   recipientAddress: string;
@@ -32,7 +32,18 @@ export default function SendTokensDialog({
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<SendFormData>();
+
+  // Reset form when dialog opens
+  useEffect(() => {
+    if (isOpen) {
+      reset({
+        recipientAddress: '',
+        amount: undefined,
+      });
+    }
+  }, [isOpen, reset]);
 
   // State to indicate that the transaction is pending approval/signature.
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -67,7 +78,8 @@ export default function SendTokensDialog({
         <DialogHeader>
           <DialogTitle>Send REGEN Tokens</DialogTitle>
           <DialogDescription>
-            Enter the recipient's address and the amount of REGEN tokens you want to send.
+            Enter the recipient's address and the amount of REGEN tokens you
+            want to send.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(onFormSubmit)} className='space-y-4'>
