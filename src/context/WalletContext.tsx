@@ -11,6 +11,7 @@ interface WalletContextType {
   regenPrice: number;
   connectWallet: () => Promise<void>;
   disconnectWallet: () => void;
+  sendTransaction: (recipient: string, amount: string) => Promise<string>;
 }
 
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
@@ -105,9 +106,63 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
     return () => clearInterval(interval);
   }, []);
 
+  // Send tokens to a recipient
+  const sendTransaction = async (recipient: string, amount: string): Promise<string> => {
+    try {
+      if (!address) {
+        throw new Error('Wallet not connected');
+      }
+
+      const offlineSigner = (window as any).keplr.getOfflineSigner(chainConfig.chainId);
+      const client = await SigningStargateClient.connectWithSigner(
+        chainConfig.rpc,
+        offlineSigner
+      );
+
+      // Convert REGEN to uREGEN (multiply by 10^6)
+      const amountInUREGEN = Math.floor(parseFloat(amount) * 1_000_000).toString();
+
+      const result = await client.sendTokens(
+        address,
+        recipient,
+        [
+          {
+            denom: chainConfig.stakeCurrency.coinMinimalDenom,
+            amount: amountInUREGEN,
+          },
+        ],
+        {
+          amount: [{ denom: chainConfig.stakeCurrency.coinMinimalDenom, amount: '5000' }],
+          gas: '200000',
+        }
+      );
+
+      // Update balance after successful transaction
+      const balanceResult = await client.getBalance(
+        address,
+        chainConfig.stakeCurrency.coinMinimalDenom
+      );
+      const regenBalance = (parseInt(balanceResult.amount) / 1_000_000).toFixed(6);
+      setBalance(regenBalance);
+
+      return result.transactionHash;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Transaction failed');
+      throw err;
+    }
+  };
+
   return (
     <WalletContext.Provider
-      value={{ address, balance, error, regenPrice, connectWallet, disconnectWallet }}
+      value={{ 
+        address, 
+        balance, 
+        error, 
+        regenPrice, 
+        connectWallet, 
+        disconnectWallet,
+        sendTransaction
+      }}
     >
       {children}
     </WalletContext.Provider>
