@@ -41,7 +41,7 @@ export default function SendTokensDialog({ isOpen, setIsOpen, onSend }: SendToke
                 required: "Recipient address is required",
                 pattern: {
                   value: /^regen1[a-zA-Z0-9]{38}$/,
-                  message: "Invalid Regen address format. Must start with 'regen1' and be 45 characters long"
+                  message: "Invalid address format (starts with 'regen1' and 45 characters long)"
                 }
               })} 
             />
@@ -51,7 +51,23 @@ export default function SendTokensDialog({ isOpen, setIsOpen, onSend }: SendToke
           </div>
           <div className="grid w-full items-center gap-1.5">
             <Label htmlFor="amount">Amount (REGEN)</Label>
-            <Input id="amount" type="number" step="0.000001" {...register("amount", { valueAsNumber: true })} />
+            <Input 
+              id="amount" 
+              type="number" 
+              step="0.000001" 
+              {...register("amount", { 
+                required: "Amount is required",
+                valueAsNumber: true,
+                min: {
+                  value: 0.000001,
+                  message: "Amount must be at least 0.000001 REGEN"
+                },
+                validate: (value) => value > 0 || "Amount must be greater than 0"
+              })} 
+            />
+            {errors.amount && (
+              <p className="text-sm text-red-500">{errors.amount.message}</p>
+            )}
           </div>
           <Button type="submit">Confirm</Button>
         </form>
