@@ -26,7 +26,7 @@ function HomeContent() {
     <MainGrid>
       {address ? (
         <div className='flex flex-col md:grid md:grid-cols-2'>
-          <div className='w-full h-full md:min-h-[420px] bg-white shadow-none md:shadow-[4px_0px_8px_-4px_rgba(0,0,0,0.1)]'>
+          <div className='w-full h-full md:min-h-[420px] bg-white shadow-none md:shadow-[4px_0px_8px_-4px_rgba(0,0,0,0.1)] rounded-l-lg'>
             <AccountCard />
           </div>
           <div className='w-full'>
