@@ -4,7 +4,7 @@ import { useWallet } from '@/context/WalletContext';
 import { toast } from 'sonner'
 
 export default function AccountCard() {
-  const { address, balance, regenPrice, disconnectWallet } = useWallet();
+  const { address, balance, regenPrice } = useWallet();
 
   // Shorten the wallet address for a cleaner display
   const shortenedAddress = address ? `${address.slice(0, 10)}...${address.slice(-4)}` : '';
@@ -13,10 +13,10 @@ export default function AccountCard() {
   const marketValue = regenPrice && balance ? parseFloat(balance) * regenPrice : 0;
 
   return (
-    <div className="h-full flex flex-col gap-4 p-4">
+    <div className="h-full flex flex-col gap-4 p-10">
       <div className="flex items-center gap-2">
         <Image 
-          src="/logo_Regen_Network-cropped.png"
+          src="/logo_Regen_Network-cropped.svg"
           alt="Regen Network Logo"
           width={112}
           height={48}
@@ -46,7 +46,8 @@ export default function AccountCard() {
           onClick={() => {
             navigator.clipboard.writeText(address);
             toast('Copied!', {
-              description: 'Wallet address copied to clipboard.'
+              description: 'Wallet address copied to clipboard.',
+              position: 'top-right'
             });
           }}
         >
@@ -54,19 +55,19 @@ export default function AccountCard() {
         </Button>
       </div>
 
-      <div className="flex items-center gap-1 text-sm text-gray-500 mt-4">
-        <span>Powered by</span>
-        <Image
-          src="/keplr-monochrome-dark.svg"
-          alt="Keplr Logo"
-          width={75}
-          height={25}
-        />
+      <div className="flex flex-col items-center gap-1 text-sm text-gray-500 mt-auto">
+        <div className="flex items-center justify-center gap-1">
+          <span>Powered by</span>
+          <Image
+            src="/keplr-monochrome-dark.svg"
+            alt="Keplr Logo"
+            width={75}
+            height={25}
+          />
+        </div>
+        <span className="italic text-xs">Connected to Regen Redwood Testnet</span>
       </div>
 
-      <Button onClick={disconnectWallet} variant="destructive" className="mt-10">
-        Disconnect Keplr
-      </Button>
     </div>
   );
 }
