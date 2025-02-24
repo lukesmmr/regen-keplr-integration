@@ -10,4 +10,4 @@ export default function WalletConnection() {
       <Button onClick={connectWallet}>Connect Keplr</Button>
     </div>
   );
-} 
+}

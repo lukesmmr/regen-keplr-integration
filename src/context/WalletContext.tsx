@@ -1,6 +1,12 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from 'react';
 import { SigningStargateClient } from '@cosmjs/stargate';
 import { chainConfig } from '@/app/config/chainConfig';
 
@@ -43,7 +49,9 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
 
       // Enable the chain and get the offline signer
       await (window as any).keplr.enable(chainConfig.chainId);
-      const offlineSigner = (window as any).keplr.getOfflineSigner(chainConfig.chainId);
+      const offlineSigner = (window as any).keplr.getOfflineSigner(
+        chainConfig.chainId
+      );
       const accounts = await offlineSigner.getAccounts();
       const userAddress = accounts[0].address;
       setAddress(userAddress);
@@ -58,7 +66,9 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
         chainConfig.stakeCurrency.coinMinimalDenom
       );
       // Convert the amount (assumed in uREGEN) to REGEN with 6 decimals
-      const regenBalance = (parseInt(balanceResult.amount) / 1_000_000).toFixed(6);
+      const regenBalance = (parseInt(balanceResult.amount) / 1_000_000).toFixed(
+        6
+      );
       setBalance(regenBalance);
 
       localStorage.setItem('keplrConnected', 'true');
@@ -107,20 +117,27 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   // Send tokens to a recipient
-  const sendTransaction = async (recipient: string, amount: string): Promise<string> => {
+  const sendTransaction = async (
+    recipient: string,
+    amount: string
+  ): Promise<string> => {
     try {
       if (!address) {
         throw new Error('Wallet not connected');
       }
 
-      const offlineSigner = (window as any).keplr.getOfflineSigner(chainConfig.chainId);
+      const offlineSigner = (window as any).keplr.getOfflineSigner(
+        chainConfig.chainId
+      );
       const client = await SigningStargateClient.connectWithSigner(
         chainConfig.rpc,
         offlineSigner
       );
 
       // Convert REGEN to uREGEN (multiply by 10^6)
-      const amountInUREGEN = Math.floor(parseFloat(amount) * 1_000_000).toString();
+      const amountInUREGEN = Math.floor(
+        parseFloat(amount) * 1_000_000
+      ).toString();
 
       const result = await client.sendTokens(
         address,
@@ -132,7 +149,12 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
           },
         ],
         {
-          amount: [{ denom: chainConfig.stakeCurrency.coinMinimalDenom, amount: '5000' }],
+          amount: [
+            {
+              denom: chainConfig.stakeCurrency.coinMinimalDenom,
+              amount: '5000',
+            },
+          ],
           gas: '200000',
         }
       );
@@ -142,7 +164,9 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
         address,
         chainConfig.stakeCurrency.coinMinimalDenom
       );
-      const regenBalance = (parseInt(balanceResult.amount) / 1_000_000).toFixed(6);
+      const regenBalance = (parseInt(balanceResult.amount) / 1_000_000).toFixed(
+        6
+      );
       setBalance(regenBalance);
 
       return result.transactionHash;
@@ -154,14 +178,14 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <WalletContext.Provider
-      value={{ 
-        address, 
-        balance, 
-        error, 
-        regenPrice, 
-        connectWallet, 
+      value={{
+        address,
+        balance,
+        error,
+        regenPrice,
+        connectWallet,
         disconnectWallet,
-        sendTransaction
+        sendTransaction,
       }}
     >
       {children}
@@ -175,4 +199,4 @@ export const useWallet = () => {
     throw new Error('useWallet must be used within a WalletProvider');
   }
   return context;
-}; 
+};

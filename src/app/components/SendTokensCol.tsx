@@ -2,7 +2,6 @@ import Image from 'next/image';
 import { useWallet } from '@/context/WalletContext';
 import PoweredByKeplr from './PoweredByKeplr';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import SendTokensDialog from '@/app/components/SendTokensDialog';
 
@@ -14,11 +13,6 @@ type SendFormData = {
 export default function SendCard() {
   const { sendTransaction } = useWallet();
   const [isOpen, setIsOpen] = useState(false);
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<SendFormData>();
 
   return (
     <div className='h-full flex flex-col gap-6 p-10'>
@@ -60,22 +54,23 @@ export default function SendCard() {
               dismissible: true,
               position: 'top-right',
               action: {
-                label: "Close",
-                onClick: () => toast.dismiss()
-              }
+                label: 'Close',
+                onClick: () => toast.dismiss(),
+              },
             });
             return txHash;
           } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : 'Transaction failed';
+            const errorMessage =
+              error instanceof Error ? error.message : 'Transaction failed';
             toast.error('Transaction Failed', {
               description: errorMessage,
               duration: Infinity,
-              dismissible: true, 
+              dismissible: true,
               position: 'top-right',
               action: {
-                label: "Close",
-                onClick: () => toast.dismiss()
-              }
+                label: 'Close',
+                onClick: () => toast.dismiss(),
+              },
             });
             throw error;
           }
