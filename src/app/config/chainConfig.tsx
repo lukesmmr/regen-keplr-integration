@@ -36,5 +36,4 @@ export const chainConfig = {
       },
     },
   ],
-  features: ['stargate'],
 };

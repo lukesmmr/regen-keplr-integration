@@ -44,7 +44,6 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
         currencies: chainConfig.currencies,
         feeCurrencies: chainConfig.feeCurrencies,
         stakeCurrency: chainConfig.stakeCurrency,
-        features: chainConfig.features,
       });
 
       // Enable the chain and get the offline signer
