@@ -35,7 +35,19 @@ export default function SendTokensDialog({ isOpen, setIsOpen, onSend }: SendToke
         <form onSubmit={handleSubmit(onSend)} className="space-y-4">
           <div className="grid w-full items-center gap-1.5">
             <Label htmlFor="recipientAddress">Recipient Address</Label>
-            <Input id="recipientAddress" {...register("recipientAddress")} />
+            <Input 
+              id="recipientAddress" 
+              {...register("recipientAddress", {
+                required: "Recipient address is required",
+                pattern: {
+                  value: /^regen1[a-zA-Z0-9]{38}$/,
+                  message: "Invalid Regen address format. Must start with 'regen1' and be 45 characters long"
+                }
+              })} 
+            />
+            {errors.recipientAddress && (
+              <p className="text-sm text-red-500">{errors.recipientAddress.message}</p>
+            )}
           </div>
           <div className="grid w-full items-center gap-1.5">
             <Label htmlFor="amount">Amount (REGEN)</Label>
