@@ -1,6 +1,10 @@
-# Keplr Regen Network Integration
+# Regen Network Keplr Integration
 
-Simple React-based Next.js application that integrates with Keplr wallet to interact with the Regen Redwood Testnet.
+React-based Next.js application that integrates with Keplr wallet to interact with the Regen Redwood Testnet.
+
+## Figma
+
+The project began with a [Figma design](https://www.figma.com/design/n8LhPDLHjl11XYsgEM23Mf/Regen-Coding-Exercise?node-id=9-62&t=Io6axJpymPOVaBPE-1) that established a focused scope for structuring the UI/UX to enable faster development. The design was implemented with flexibility, allowing for iterative improvements and additional useful features to be incorporated during the development process while maintaining efficiency.
 
 ## Features
 
@@ -10,14 +14,16 @@ Simple React-based Next.js application that integrates with Keplr wallet to inte
 - Display account information
 - Basic responsive UI with Tailwind CSS and shadcn/ui
 - Basic error handling
+- Integration with Coingecko API to fetch REGEN price
+- Integration with toast notifications for feedback
 
 ## Tech Stack
 
 - Next.js
 - TypeScript
 - Keplr Wallet
-- @regen-network/api
 - CosmJS
+- Tailwind CSS
 
 ## Prerequisites
 
