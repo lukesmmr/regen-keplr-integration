@@ -1,12 +1,9 @@
 import Image from 'next/image';
-import { Button } from "@/components/ui/button";
 import { useWallet } from '@/context/WalletContext';
 import PoweredByKeplr from './PoweredByKeplr';
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
+import SendTokensDialog from '@/app/components/SendTokensDialog';
 
 type SendFormData = {
   recipientAddress: string;
@@ -17,12 +14,6 @@ export default function SendCard() {
   const { address, balance } = useWallet();
   const [isOpen, setIsOpen] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm<SendFormData>();
-
-  const onSubmit = (data: SendFormData) => {
-    console.log('Sending tokens...', address, balance, data);
-    // TODO: Implement token sending logic
-    setIsOpen(false);
-  };
 
   return (
     <div className="h-full flex flex-col gap-6 p-10">
@@ -46,32 +37,15 @@ export default function SendCard() {
         </p>
       </div>
 
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogTrigger asChild>
-          <Button 
-            className="w-full bg-[#98C5B1] hover:bg-[#7BA696] text-white font-medium py-6 rounded-lg mt-auto"
-            onClick={() => setIsOpen(true)}
-          >
-            START
-          </Button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Send REGEN Tokens</DialogTitle>
-          </DialogHeader>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div className="grid w-full items-center gap-1.5">
-              <Label htmlFor="recipientAddress">Recipient Address</Label>
-              <Input id="recipientAddress" {...register("recipientAddress")} />
-            </div>
-            <div className="grid w-full items-center gap-1.5">
-              <Label htmlFor="amount">Amount (REGEN)</Label>
-              <Input id="amount" type="number" step="0.000001" {...register("amount", { valueAsNumber: true })} />
-            </div>
-            <Button type="submit">Confirm</Button>
-          </form>
-        </DialogContent>
-      </Dialog>
+      <SendTokensDialog 
+        isOpen={isOpen} 
+        setIsOpen={setIsOpen}
+        onSend={(data: SendFormData) => {
+          console.log('Sending tokens...', address, balance, data);
+          // TODO: Implement token sending logic
+          setIsOpen(false);
+        }}
+      />
 
       <div className="md:hidden mt-auto mt-[10%]">
         <PoweredByKeplr />
