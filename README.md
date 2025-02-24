@@ -6,6 +6,9 @@ React-based Next.js application that integrates with Keplr wallet to interact wi
 
 The project began with a [Figma design](https://www.figma.com/design/n8LhPDLHjl11XYsgEM23Mf/Regen-Coding-Exercise?node-id=9-62&t=Io6axJpymPOVaBPE-1) that established a focused scope for structuring the UI/UX to enable faster development. The design was implemented with flexibility, allowing for iterative improvements and additional useful features to be incorporated during the development process while maintaining efficiency.
 
+![image](https://github.com/user-attachments/assets/2a5c6820-ddd0-4fb7-82b0-e236eade0ab1)
+
+
 ## Features
 
 - Keplr wallet connection and Redwood testnet integration
