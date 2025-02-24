@@ -48,8 +48,8 @@ export default function SendCard() {
               data.recipientAddress,
               data.amount.toString()
             );
-            toast.success('Transaction Successful', {
-              description: `Transaction Hash: ${txHash}`,
+            toast.success('Transaction Successful 🎉', {
+              description: `Hash: ${txHash}`,
               duration: Infinity,
               dismissible: true,
               position: 'top-right',

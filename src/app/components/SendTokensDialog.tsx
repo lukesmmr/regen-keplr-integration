@@ -74,7 +74,7 @@ export default function SendTokensDialog({
           START
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent onPointerDownOutside={(e) => e.preventDefault()}>
         <DialogHeader>
           <DialogTitle>Send REGEN Tokens</DialogTitle>
           <DialogDescription>
