@@ -6,8 +6,11 @@ React-based Next.js application that integrates with Keplr wallet to interact wi
 
 The project began with a [Figma design](https://www.figma.com/design/n8LhPDLHjl11XYsgEM23Mf/Regen-Coding-Exercise?node-id=9-62&t=Io6axJpymPOVaBPE-1) that established a focused scope for structuring the UI/UX to enable faster development. The design was implemented with flexibility, allowing for iterative improvements and additional useful features to be incorporated during the development process while maintaining efficiency.
 
+Figma Design
 ![image](https://github.com/user-attachments/assets/2a5c6820-ddd0-4fb7-82b0-e236eade0ab1)
 
+Final Result
+<img width="979" alt="image" src="https://github.com/user-attachments/assets/7730ad80-2318-4a30-a3c7-513aabffe461" />
 
 ## Features
 
