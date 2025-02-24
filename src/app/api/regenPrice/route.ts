@@ -1,25 +1,47 @@
 import { NextResponse } from 'next/server';
 
+// In-memory cache
+let cachedPrice: number | null = null;
+let lastFetchTime: number = 0;
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
+const FALLBACK_PRICE = 0.02875; // Approximate price per REGEN token
+
 export async function GET(request: Request) {
   try {
-    // Public API endpoint from CoinGecko for the "regen-network" id
+    const now = Date.now();
+    
+    // Return cached price if available and not expired
+    if (cachedPrice && (now - lastFetchTime) < CACHE_DURATION) {
+      return NextResponse.json({ 
+        regenPrice: cachedPrice
+      });
+    }
+
+    // Fetch new price if cache expired or not available
     const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=regen&vs_currencies=usd');
     const data = await res.json();
     const regenPrice = data?.regen?.usd;
 
     if (!regenPrice) {
-      console.error('REGEN price not available in API response:', data);
-      return NextResponse.json({ error: 'Price not available' }, { status: 400 });
+      console.warn('REGEN price not available, using fallback price');
+      return NextResponse.json({ 
+        regenPrice: FALLBACK_PRICE,
+        usingFallback: true
+      });
     }
 
-    return NextResponse.json({ regenPrice }, {
-      // Cache the response for 5 minutes and allow stale content while revalidating
-      headers: {
-        'Cache-Control': 's-maxage=300, stale-while-revalidate=60'
-      }
+    // Update cache
+    cachedPrice = regenPrice;
+    lastFetchTime = now;
+
+    return NextResponse.json({ 
+      regenPrice
     });
   } catch (error) {
     console.error('Error fetching REGEN price:', error);
-    return NextResponse.json({ error: `Failed to fetch price: ${error}` }, { status: 500 });
+    return NextResponse.json({ 
+      regenPrice: FALLBACK_PRICE,
+      usingFallback: true
+    });
   }
 }
