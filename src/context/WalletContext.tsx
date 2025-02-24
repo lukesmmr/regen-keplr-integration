@@ -7,7 +7,7 @@ import React, {
   useEffect,
   ReactNode,
 } from 'react';
-import { SigningStargateClient } from '@cosmjs/stargate';
+import { getSigningRegenClient } from '@regen-network/api';
 import { chainConfig } from '@/app/config/chainConfig';
 
 interface WalletContextType {
@@ -55,11 +55,11 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
       const userAddress = accounts[0].address;
       setAddress(userAddress);
 
-      // Create Stargate client and query balance
-      const client = await SigningStargateClient.connectWithSigner(
-        chainConfig.rpc,
-        offlineSigner
-      );
+      // Create a client using the Regen Network API and query balance
+      const client = await getSigningRegenClient({
+        rpcEndpoint: chainConfig.rpc,
+        signer: offlineSigner,
+      });
       const balanceResult = await client.getBalance(
         userAddress,
         chainConfig.stakeCurrency.coinMinimalDenom
@@ -115,7 +115,7 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
     return () => clearInterval(interval);
   }, []);
 
-  // Send tokens to a recipient
+  // Send tokens to a recipient using the Regen Network API
   const sendTransaction = async (
     recipient: string,
     amount: string
@@ -128,10 +128,10 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
       const offlineSigner = (window as any).keplr.getOfflineSigner(
         chainConfig.chainId
       );
-      const client = await SigningStargateClient.connectWithSigner(
-        chainConfig.rpc,
-        offlineSigner
-      );
+      const client = await getSigningRegenClient({
+        rpcEndpoint: chainConfig.rpc,
+        signer: offlineSigner,
+      });
 
       // Convert REGEN to uREGEN (multiply by 10^6)
       const amountInUREGEN = Math.floor(
