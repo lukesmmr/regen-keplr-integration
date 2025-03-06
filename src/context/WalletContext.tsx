@@ -115,6 +115,23 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    // Add event listener for Keplr wallet changes
+    const handleKeplrAccountChange = () => {
+      // Reconnect wallet to get updated account information
+      connectWallet();
+    };
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('keplr_keystorechange', handleKeplrAccountChange);
+      
+      // Clean up event listener on component unmount
+      return () => {
+        window.removeEventListener('keplr_keystorechange', handleKeplrAccountChange);
+      };
+    }
+  }, [address]);
+
   // Send tokens to a recipient using the Regen Network API
   const sendTransaction = async (
     recipient: string,
