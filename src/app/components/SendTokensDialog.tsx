@@ -59,6 +59,8 @@ export default function SendTokensDialog({
     } catch (error) {
       // Keep modal open if there's an error
       // Errors are already handled in onSend (i.e. via toast notifications)
+      // eslint-disable-next-line no-console
+      console.error('Error sending tokens:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -74,11 +76,11 @@ export default function SendTokensDialog({
           START
         </Button>
       </DialogTrigger>
-      <DialogContent
-        onPointerDownOutside={(e) => e.preventDefault()}
-      >
+      <DialogContent onPointerDownOutside={(e) => e.preventDefault()}>
         <DialogHeader>
-          <DialogTitle className='max-[896px]:text-xl text-lg pb-2'>Send REGEN Tokens</DialogTitle>
+          <DialogTitle className='max-[896px]:text-xl text-lg pb-2'>
+            Send REGEN Tokens
+          </DialogTitle>
           <DialogDescription className='max-[896px]:text-lg pb-4'>
             Enter the recipient&apos;s address and the amount of REGEN tokens
             you want to send.
@@ -86,7 +88,9 @@ export default function SendTokensDialog({
         </DialogHeader>
         <form onSubmit={handleSubmit(onFormSubmit)} className='space-y-8'>
           <div className='grid w-full items-center gap-1.5'>
-            <Label className='max-[896px]:text-lg' htmlFor='recipientAddress'>Recipient Address</Label>
+            <Label className='max-[896px]:text-lg' htmlFor='recipientAddress'>
+              Recipient Address
+            </Label>
             <Input
               placeholder='regen1k8c2m5cn322akk5wy8lpt87dd2f4yh9zced8cw'
               id='recipientAddress'
@@ -107,7 +111,9 @@ export default function SendTokensDialog({
             )}
           </div>
           <div className='grid w-full items-center gap-1.5'>
-            <Label className='max-[896px]:text-lg' htmlFor='amount'>Amount (REGEN)</Label>
+            <Label className='max-[896px]:text-lg' htmlFor='amount'>
+              Amount (REGEN)
+            </Label>
             <Input
               id='amount'
               placeholder='Enter amount in REGEN...'

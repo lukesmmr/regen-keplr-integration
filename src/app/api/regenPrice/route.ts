@@ -6,7 +6,7 @@ let lastFetchTime: number = 0;
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
 const FALLBACK_PRICE = 0.02875; // Approximate price per REGEN token
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
     const now = Date.now();
     
