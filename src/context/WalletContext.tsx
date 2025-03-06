@@ -9,6 +9,11 @@ import React, {
 } from 'react';
 import { getSigningRegenClient } from '@regen-network/api';
 import { chainConfig } from '@/app/config/chainConfig';
+import { Window as KeplrWindow } from '@keplr-wallet/types';
+
+declare global {
+  interface Window extends KeplrWindow {}
+}
 
 interface WalletContextType {
   address: string;
@@ -27,14 +32,15 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
   const [balance, setBalance] = useState('');
   const [error, setError] = useState('');
   const [regenPrice, setRegenPrice] = useState(0);
+  const keplrWallet = typeof window !== 'undefined' ? window.keplr : null;
 
   const connectWallet = async () => {
     try {
-      if (!(window as any).keplr) {
+      if (!keplrWallet) {
         throw new Error('Please install Keplr extension');
       }
       // Suggest the chain information for custom chains
-      await (window as any).keplr.experimentalSuggestChain({
+      await keplrWallet?.experimentalSuggestChain({
         chainId: chainConfig.chainId,
         chainName: chainConfig.chainName,
         rpc: chainConfig.rpc,
@@ -47,8 +53,8 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
       });
 
       // Enable the chain and get the offline signer
-      await (window as any).keplr.enable(chainConfig.chainId);
-      const offlineSigner = (window as any).keplr.getOfflineSigner(
+      await keplrWallet?.enable(chainConfig.chainId);
+      const offlineSigner = keplrWallet?.getOfflineSigner(
         chainConfig.chainId
       );
       const accounts = await offlineSigner.getAccounts();
